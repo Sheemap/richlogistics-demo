@@ -1,0 +1,35 @@
+﻿@model IEnumerable<OpenPosition>
+
+@{
+    ViewData["Title"] = "HR Approval";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Requested Positions</h1>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Role)
+        </th>
+        <th></th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Role.Name)
+            </td>
+            <td>
+                <a asp-action="ApproveRequest" asp-route-id="@item.Id">Approve</a>
+            </td>
+            <td>
+                <a asp-action="DeclineRequest" asp-route-id="@item.Id">Decline</a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

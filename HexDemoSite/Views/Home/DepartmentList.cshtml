@@ -1,0 +1,41 @@
+@model IEnumerable<HexDemoSite.Models.DepartmentPosition>
+
+@{
+    ViewData["Title"] = "Department Positions";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Positions</h1>
+
+<p>
+    <a asp-action="CreatePosition">Open New Position</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Role)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Employee)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Role.Name)
+            </td>
+            <td>
+                if (item.Employee != null) {
+                    @Html.DisplayFor(modelItem => item.Employee.Name)
+                } else {
+                    <a asp-action="RequestPosition" asp-route-id="@item.Id">Request</a>
+                }
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
