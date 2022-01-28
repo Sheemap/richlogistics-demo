@@ -27,7 +27,7 @@ jobs:
       with:
         host: ${{ secrets.DEPLOY_SERVER }}
         username: Administrator
-        key: ${{ secrets.DEPLOY_SSH_KEY }}
+        password: ${{ secrets.DEPLOY_PASSWORD }}
         port: 22
         source: "./publish-out"
         target: "C:\\Websites\\HexDemo"
