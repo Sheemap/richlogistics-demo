@@ -30,4 +30,4 @@ jobs:
         password: ${{ secrets.DEPLOY_PASSWORD }}
         port: 22
         source: "./publish-out"
-        target: "C:\\Websites\\HexDemo"
+        target: "C:\\Websites\\HexDemo\\Testtt"
