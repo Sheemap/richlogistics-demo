@@ -20,7 +20,7 @@ jobs:
     - name: Build
       run: dotnet build --no-restore
     - name: Publish
-      run: dotnet publish -o /publish-out
+      run: dotnet publish -o ./publish-out
     
     - name: ssh deploy
       # You may pin to the exact commit or the version.
@@ -34,6 +34,6 @@ jobs:
         # Remote user
         REMOTE_USER: Administrator
         # Source directory
-        SOURCE: /publish-out
+        SOURCE: ./publish-out
         # Target directory
         TARGET: C:\Websites\HexDemo
