@@ -25,13 +25,60 @@ public class HomeController : Controller
     
     public IActionResult DepartmentList()
     {
-        return View(new List<DepartmentPosition>());
+        var assisManager = new Role
+        {
+            Name = "Assistant Manager",
+        };
+        var accountant = new Role
+        {
+            Name = "Accountant",
+        };
+        var employee = new Employee
+        {
+            Name = "Jane Doe",
+        };
+        var posList = new List<DepartmentPosition>()
+        {
+            new DepartmentPosition() {  Role = accountant, Employee = employee },
+            new DepartmentPosition() {  Role = assisManager },
+        };
+        return View(posList);
+    }
+
+    public IActionResult HrApprovalList()
+    {
+        var assisManager = new Role
+        {
+            Name = "Assistant Manager",
+        };
+        var pos = new OpenPosition
+        {
+            Role = assisManager,
+        };
+        var posList = new List<OpenPosition>()
+        {
+            pos,
+        };
+        return View(posList);
     }
     
-    // public IActionResult RequestPosition()
-    // {
-    //     return View(new List<DepartmentPosition>());
-    // }
+    public IActionResult LeadershipApproval()
+    {
+        var exampleRole = new Role
+        {
+            Name = "Assistant Manager",
+        };
+        var examplePos = new OpenPosition()
+        {
+            Role = exampleRole
+        };
+        return View(examplePos);
+    }
+    
+    public IActionResult CandidateForm()
+    {
+        return View();
+    }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()

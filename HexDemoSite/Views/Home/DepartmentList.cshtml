@@ -29,7 +29,7 @@
                 @Html.DisplayFor(modelItem => item.Role.Name)
             </td>
             <td>
-                if (item.Employee != null) {
+                @if (item.Employee != null) {
                     @Html.DisplayFor(modelItem => item.Employee.Name)
                 } else {
                     <a asp-action="RequestPosition" asp-route-id="@item.Id">Request</a>
