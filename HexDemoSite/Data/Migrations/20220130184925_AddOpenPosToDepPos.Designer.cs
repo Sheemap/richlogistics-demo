@@ -3,6 +3,7 @@ using System;
 using HexDemoSite.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HexDemoSite.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220130184925_AddOpenPosToDepPos")]
+    partial class AddOpenPosToDepPos
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.1");
@@ -68,8 +70,7 @@ namespace HexDemoSite.Data.Migrations
 
                     b.HasIndex("EmployeeId");
 
-                    b.HasIndex("OpenPositionId")
-                        .IsUnique();
+                    b.HasIndex("OpenPositionId");
 
                     b.HasIndex("RoleId");
 
@@ -143,9 +144,8 @@ namespace HexDemoSite.Data.Migrations
                         .HasForeignKey("EmployeeId");
 
                     b.HasOne("HexDemoSite.Models.OpenPosition", "OpenPosition")
-                        .WithOne()
-                        .HasForeignKey("HexDemoSite.Models.DepartmentPosition", "OpenPositionId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .WithMany()
+                        .HasForeignKey("OpenPositionId");
 
                     b.HasOne("HexDemoSite.Models.Role", "Role")
                         .WithMany()

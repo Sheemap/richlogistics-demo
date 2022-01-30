@@ -3,6 +3,7 @@ using System;
 using HexDemoSite.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HexDemoSite.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220130182514_Initial")]
+    partial class Initial
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.1");
@@ -58,18 +60,12 @@ namespace HexDemoSite.Data.Migrations
                     b.Property<int?>("EmployeeId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("OpenPositionId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int>("RoleId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
                     b.HasIndex("EmployeeId");
-
-                    b.HasIndex("OpenPositionId")
-                        .IsUnique();
 
                     b.HasIndex("RoleId");
 
@@ -142,11 +138,6 @@ namespace HexDemoSite.Data.Migrations
                         .WithMany()
                         .HasForeignKey("EmployeeId");
 
-                    b.HasOne("HexDemoSite.Models.OpenPosition", "OpenPosition")
-                        .WithOne()
-                        .HasForeignKey("HexDemoSite.Models.DepartmentPosition", "OpenPositionId")
-                        .OnDelete(DeleteBehavior.SetNull);
-
                     b.HasOne("HexDemoSite.Models.Role", "Role")
                         .WithMany()
                         .HasForeignKey("RoleId")
@@ -154,8 +145,6 @@ namespace HexDemoSite.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Employee");
-
-                    b.Navigation("OpenPosition");
 
                     b.Navigation("Role");
                 });

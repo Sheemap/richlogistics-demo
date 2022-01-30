@@ -22,6 +22,10 @@ public class DataContext : DbContext
             .HasOne(x => x.Role);
         modelBuilder.Entity<DepartmentPosition>()
             .HasOne(x => x.Employee);
+        modelBuilder.Entity<DepartmentPosition>()
+            .HasOne(x => x.OpenPosition)
+            .WithOne()
+            .OnDelete(DeleteBehavior.SetNull);
 
         modelBuilder.Entity<OpenPosition>()
             .HasKey(x => x.Id);
@@ -36,8 +40,50 @@ public class DataContext : DbContext
 
         base.OnModelCreating(modelBuilder);
     }
+    
+    public DbSet<Employee> Employees { get; set; }
+    public DbSet<Role> Roles { get; set; }
+    public DbSet<DepartmentPosition> DepartmentPositions { get; set; }
+    public DbSet<OpenPosition> OpenPositions { get; set; }
+    public DbSet<CandidateForm> CandidateForms { get; set; }
 
-    public DbSet<HexDemoSite.Models.DepartmentPosition> Position { get; set; }
+    public static void MigrateAndSeed(DataContext context)
+    {
+        context.Database.Migrate();
+        if (!context.Roles.Any())
+        {
+            context.Roles.AddRange(
+                new Role { Id = 1, Name = "HR" },
+                new Role { Id = 2, Name = "Manager" },
+                new Role { Id = 3, Name = "Employee" }
+            );
+            context.SaveChanges();
+        }
 
-    public DbSet<HexDemoSite.Models.CandidateForm> CandidateForm { get; set; }
+        if (!context.Employees.Any())
+        {
+            context.Employees.AddRange(
+                new Employee { Id = 1, Name = "John Doe" },
+                new Employee { Id = 2, Name = "Jane Doe" }
+            );
+        }
+        
+        if (!context.DepartmentPositions.Any())
+        {
+            context.DepartmentPositions.AddRange(
+                new DepartmentPosition { Id = 1, EmployeeId = 1, RoleId = 1 },
+                new DepartmentPosition { Id = 2, EmployeeId = 2, RoleId = 2 },
+                new DepartmentPosition { Id = 3, RoleId = 3 }
+            );
+        }
+        
+        if (!context.OpenPositions.Any())
+        {
+            context.OpenPositions.AddRange(
+                new OpenPosition { Id = 1, RoleId = 3 }
+            );
+        }
+        
+        context.SaveChanges();
+    }
 }
