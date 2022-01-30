@@ -1,16 +1,20 @@
 ﻿using System.Diagnostics;
+using HexDemoSite.Data;
 using Microsoft.AspNetCore.Mvc;
 using HexDemoSite.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace HexDemoSite.Controllers;
 
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
+    private readonly DataContext _context;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(ILogger<HomeController> logger, DataContext context)
     {
         _logger = logger;
+        _context = context;
     }
 
     public IActionResult Index()
@@ -25,41 +29,87 @@ public class HomeController : Controller
     
     public IActionResult DepartmentList()
     {
-        var assisManager = new Role
-        {
-            Name = "Assistant Manager",
-        };
-        var accountant = new Role
-        {
-            Name = "Accountant",
-        };
-        var employee = new Employee
-        {
-            Name = "Jane Doe",
-        };
-        var posList = new List<DepartmentPosition>()
-        {
-            new DepartmentPosition() {  Role = accountant, Employee = employee },
-            new DepartmentPosition() {  Role = assisManager },
-        };
+        var posList = _context.DepartmentPositions
+            .Include(x => x.Role)
+            .Include(x => x.Employee)
+            .ToList();
         return View(posList);
+    }
+
+    [HttpPost]
+    public IActionResult RequestPosition(int id)
+    {
+        var depPos = _context.DepartmentPositions.Find(id);
+        if (depPos == null)
+        {
+            return NotFound();
+        }
+
+        var openPos = new OpenPosition
+        {
+            RoleId = depPos.RoleId,
+        };
+        _context.OpenPositions.Add(openPos);
+
+        depPos.OpenPosition = openPos;
+        
+        _context.SaveChanges();
+        
+        return NoContent();
+    }
+    
+    [HttpPost]
+    public IActionResult CancelPositionRequest(int id)
+    {
+        var openPos = _context.OpenPositions.Find(id);
+        if (openPos == null)
+        {
+            return NotFound();
+        }
+
+        _context.OpenPositions.Remove(openPos);
+        _context.SaveChanges();
+        
+        return NoContent();
     }
 
     public IActionResult HrApprovalList()
     {
-        var assisManager = new Role
+        var reqList = _context.OpenPositions
+            .Include(x => x.Role)
+            .Where(x => x.DateApproved == null)
+            .ToList();
+        return View(reqList);
+    }
+    
+    [HttpPost]
+    public IActionResult HRApproveRequest(int id)
+    {
+        var openPos = _context.OpenPositions.Find(id);
+        if (openPos == null)
         {
-            Name = "Assistant Manager",
-        };
-        var pos = new OpenPosition
+            return NotFound();
+        }
+        
+        openPos.DateApproved = DateTimeOffset.Now;
+        _context.SaveChanges();
+        
+        return NoContent();
+    }
+    
+    [HttpPost]
+    public IActionResult HRDeclineRequest(int id)
+    {
+        var openPos = _context.OpenPositions.Find(id);
+        if (openPos == null)
         {
-            Role = assisManager,
-        };
-        var posList = new List<OpenPosition>()
-        {
-            pos,
-        };
-        return View(posList);
+            return NotFound();
+        }
+
+        _context.OpenPositions.Remove(openPos);
+        _context.SaveChanges();
+        
+        return NoContent();
     }
     
     public IActionResult LeadershipApproval()

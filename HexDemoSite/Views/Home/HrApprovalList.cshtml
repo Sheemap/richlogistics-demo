@@ -24,12 +24,37 @@
                 @Html.DisplayFor(modelItem => item.Role.Name)
             </td>
             <td>
-                <a asp-action="ApproveRequest" asp-route-id="@item.Id">Approve</a>
+                <button class="btn btn-success" data-id="@item.Id" data-action="approve">Approve</button>
             </td>
             <td>
-                <a asp-action="DeclineRequest" asp-route-id="@item.Id">Decline</a>
+                <button class="btn btn-secondary" data-id="@item.Id" data-action="decline">Decline</button>
             </td>
         </tr>
     }
     </tbody>
 </table>
+
+@section Scripts {
+    <script>
+        $(document).ready( function () {
+            $('button').click((evt) => {
+                let id = $(evt.currentTarget).data('id');
+                let action = $(evt.currentTarget).data('action');
+                let url = action === 'approve' ?
+                    '@Url.Action("HRApproveRequest", "Home")/' :
+                    '@Url.Action("HRDeclineRequest", "Home")/';
+                
+                $.ajax({
+                    url: url + id,
+                    type: 'POST',
+                    success: function (data) {
+                        document.location.reload();
+                    },
+                    failure: function (data) {
+                        alert(data);
+                    } 
+                });
+            });
+        });
+    </script>
+}

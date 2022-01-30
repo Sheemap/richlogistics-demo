@@ -12,18 +12,18 @@
 </p>
 <table class="table">
     <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Role)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Employee)
-            </th>
-            <th></th>
-        </tr>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Role)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Employee)
+        </th>
+        <th></th>
+    </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+    @foreach (var item in Model) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.Role.Name)
@@ -31,11 +31,41 @@
             <td>
                 @if (item.Employee != null) {
                     @Html.DisplayFor(modelItem => item.Employee.Name)
-                } else {
-                    <a asp-action="RequestPosition" asp-route-id="@item.Id">Request</a>
+                }
+                else if (item.OpenPositionId != null)
+                {
+                    <button class="btn btn-secondary" data-id="@item.OpenPositionId" data-action="cancel">Cancel</button>
+                }
+                else {
+                    <button class="btn btn-primary" data-id="@item.Id" data-action="request">Request</button>
                 }
             </td>
         </tr>
-}
+    }
     </tbody>
 </table>
+
+@section Scripts {
+    <script>
+        $(document).ready( function () {
+            $('button').click((evt) => {
+                let id = $(evt.currentTarget).data('id');
+                let action = $(evt.currentTarget).data('action');
+                let url = action === 'request' ?
+                    '@Url.Action("RequestPosition", "Home")/' :
+                    '@Url.Action("CancelPositionRequest", "Home")/';
+                
+                $.ajax({
+                    url: url + id,
+                    type: 'POST',
+                    success: function (data) {
+                        document.location.reload();
+                    },
+                    failure: function (data) {
+                        alert(data);
+                    } 
+                });
+            });
+        });
+    </script>
+}
