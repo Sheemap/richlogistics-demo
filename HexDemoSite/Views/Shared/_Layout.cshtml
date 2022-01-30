@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@inject IConfiguration _configuration
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
@@ -43,9 +44,12 @@
 </div>
 
 <footer class="border-top footer text-muted">
-    <div class="container">
-        &copy; 2022 - HexDemoSite - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-    </div>
+    @{
+        var leaderEmail = _configuration.GetValue<string>("LeadershipEmail");
+        <div class="container">
+            &copy; 2022 - HexDemoSite - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a> | Leadership Email: @leaderEmail
+        </div>
+    }
 </footer>
 <script src="~/lib/jquery/dist/jquery.min.js"></script>
 <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
