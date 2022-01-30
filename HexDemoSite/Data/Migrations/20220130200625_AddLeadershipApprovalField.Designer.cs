@@ -3,6 +3,7 @@ using System;
 using HexDemoSite.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,14 +11,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HexDemoSite.Data.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20220130200625_AddLeadershipApprovalField")]
+    partial class AddLeadershipApprovalField
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "6.0.1");
 
-            modelBuilder.Entity("HexDemoSite.Models.Candidate", b =>
+            modelBuilder.Entity("HexDemoSite.Models.CandidateForm", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -97,16 +99,18 @@ namespace HexDemoSite.Data.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTimeOffset?>("DateFilled")
-                        .HasColumnType("TEXT");
-
                     b.Property<DateTimeOffset?>("HRDateApproved")
                         .HasColumnType("TEXT");
 
                     b.Property<DateTimeOffset?>("LeadershipDateApproved")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("RoleId")
+                        .HasColumnType("INTEGER");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("RoleId");
 
                     b.ToTable("OpenPositions");
                 });
@@ -126,7 +130,7 @@ namespace HexDemoSite.Data.Migrations
                     b.ToTable("Roles");
                 });
 
-            modelBuilder.Entity("HexDemoSite.Models.Candidate", b =>
+            modelBuilder.Entity("HexDemoSite.Models.CandidateForm", b =>
                 {
                     b.HasOne("HexDemoSite.Models.OpenPosition", "OpenPosition")
                         .WithMany()
@@ -144,7 +148,7 @@ namespace HexDemoSite.Data.Migrations
                         .HasForeignKey("EmployeeId");
 
                     b.HasOne("HexDemoSite.Models.OpenPosition", "OpenPosition")
-                        .WithOne("DepartmentPosition")
+                        .WithOne()
                         .HasForeignKey("HexDemoSite.Models.DepartmentPosition", "OpenPositionId")
                         .OnDelete(DeleteBehavior.SetNull);
 
@@ -163,8 +167,13 @@ namespace HexDemoSite.Data.Migrations
 
             modelBuilder.Entity("HexDemoSite.Models.OpenPosition", b =>
                 {
-                    b.Navigation("DepartmentPosition")
+                    b.HasOne("HexDemoSite.Models.Role", "Role")
+                        .WithMany()
+                        .HasForeignKey("RoleId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Role");
                 });
 #pragma warning restore 612, 618
         }

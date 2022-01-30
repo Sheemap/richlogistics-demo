@@ -1,55 +1,46 @@
 @model HexDemoSite.Models.Candidate
 
 @{
-    ViewData["Title"] = "Candidate Form";
+    ViewData["Title"] = "CandidateConfirm";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Candidate Form</h1>
-
-@if (Model?.OpenPosition != null)
-{
-    <h4>Submit your application for <strong>@Model.OpenPosition.DepartmentPosition.Role.Name</strong></h4>
-}
-else
-{
-    <h4>Submit your application</h4>
-}
+<h4>Confirm your information</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
-        <form asp-action="CandidateForm">
-            @if (Model?.OpenPosition != null)
-            {
-                <div style="display: none">
-                    <input asp-for="OpenPositionId"/>
-                </div>
-            }
-            
+        <form asp-action="CandidateConfirm">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="OpenPositionId" />
             <div class="form-group">
                 <label asp-for="FirstName" class="control-label"></label>
-                <input asp-for="FirstName" class="form-control"/>
+                <input asp-for="FirstName" class="form-control" />
                 <span asp-validation-for="FirstName" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="LastName" class="control-label"></label>
-                <input asp-for="LastName" class="form-control"/>
+                <input asp-for="LastName" class="form-control" />
                 <span asp-validation-for="LastName" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control"/>
+                <input asp-for="Email" class="form-control" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Phone" class="control-label"></label>
-                <input asp-for="Phone" class="form-control"/>
+                <input asp-for="Phone" class="form-control" />
                 <span asp-validation-for="Phone" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary"/>
+                <input type="submit" value="Confirm" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+

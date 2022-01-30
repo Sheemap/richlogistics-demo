@@ -24,18 +24,16 @@ public class DataContext : DbContext
             .HasOne(x => x.Employee);
         modelBuilder.Entity<DepartmentPosition>()
             .HasOne(x => x.OpenPosition)
-            .WithOne()
+            .WithOne(x => x.DepartmentPosition)
             .OnDelete(DeleteBehavior.SetNull);
 
         modelBuilder.Entity<OpenPosition>()
             .HasKey(x => x.Id);
-        modelBuilder.Entity<OpenPosition>()
-            .HasOne(x => x.Role);
         
-        modelBuilder.Entity<CandidateForm>()
+        modelBuilder.Entity<Candidate>()
             .HasKey(x => x.Id);
 
-        modelBuilder.Entity<CandidateForm>()
+        modelBuilder.Entity<Candidate>()
             .HasOne(x => x.OpenPosition);
 
         base.OnModelCreating(modelBuilder);
@@ -45,7 +43,7 @@ public class DataContext : DbContext
     public DbSet<Role> Roles { get; set; }
     public DbSet<DepartmentPosition> DepartmentPositions { get; set; }
     public DbSet<OpenPosition> OpenPositions { get; set; }
-    public DbSet<CandidateForm> CandidateForms { get; set; }
+    public DbSet<Candidate> CandidateForms { get; set; }
 
     public static void MigrateAndSeed(DataContext context)
     {
@@ -55,7 +53,10 @@ public class DataContext : DbContext
             context.Roles.AddRange(
                 new Role { Id = 1, Name = "HR" },
                 new Role { Id = 2, Name = "Manager" },
-                new Role { Id = 3, Name = "Employee" }
+                new Role { Id = 3, Name = "Janitor" },
+                new Role { Id = 4, Name = "Driver" },
+                new Role { Id = 5, Name = "Air Traffic Controller" },
+                new Role { Id = 6, Name = "Intern" }
             );
             context.SaveChanges();
         }
@@ -76,14 +77,7 @@ public class DataContext : DbContext
                 new DepartmentPosition { Id = 3, RoleId = 3 }
             );
         }
-        
-        if (!context.OpenPositions.Any())
-        {
-            context.OpenPositions.AddRange(
-                new OpenPosition { Id = 1, RoleId = 3 }
-            );
-        }
-        
+
         context.SaveChanges();
     }
 }

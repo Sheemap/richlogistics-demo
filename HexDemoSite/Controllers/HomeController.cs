@@ -2,6 +2,7 @@
 using HexDemoSite.Data;
 using Microsoft.AspNetCore.Mvc;
 using HexDemoSite.Models;
+using HexDemoSite.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace HexDemoSite.Controllers;
@@ -10,21 +11,39 @@ public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
     private readonly DataContext _context;
+    private readonly SendGridService _sendGridService;
 
-    public HomeController(ILogger<HomeController> logger, DataContext context)
+    public HomeController(ILogger<HomeController> logger, DataContext context, SendGridService sendGridService)
     {
         _logger = logger;
         _context = context;
+        _sendGridService = sendGridService;
     }
 
     public IActionResult Index()
     {
-        return View();
+        return RedirectToAction("DepartmentList");
     }
 
     public IActionResult Privacy()
     {
         return View();
+    }
+
+    [HttpPost]
+    public IActionResult CreateDemoPosition()
+    {
+        var roles = _context.Roles.ToList();
+        var randomRole = roles[new Random().Next(0, roles.Count)];
+
+
+        var newPosition = new DepartmentPosition
+        {
+            Role = randomRole,
+        };
+        _context.DepartmentPositions.Add(newPosition);
+        _context.SaveChanges();
+        return NoContent();
     }
     
     public IActionResult DepartmentList()
@@ -47,7 +66,7 @@ public class HomeController : Controller
 
         var openPos = new OpenPosition
         {
-            RoleId = depPos.RoleId,
+            DepartmentPosition = depPos,
         };
         _context.OpenPositions.Add(openPos);
 
@@ -76,22 +95,25 @@ public class HomeController : Controller
     public IActionResult HrApprovalList()
     {
         var reqList = _context.OpenPositions
-            .Include(x => x.Role)
-            .Where(x => x.DateApproved == null)
+            .Include(x => x.DepartmentPosition.Role)
+            .Where(x => x.HRDateApproved == null)
             .ToList();
         return View(reqList);
     }
     
     [HttpPost]
-    public IActionResult HRApproveRequest(int id)
+    public async Task<IActionResult> HRApproveRequest(int id)
     {
         var openPos = _context.OpenPositions.Find(id);
         if (openPos == null)
         {
             return NotFound();
         }
+
+        var code = Guid.NewGuid().ToString();
+        await _sendGridService.SendHireRequestApprovalAsync(id, code);
         
-        openPos.DateApproved = DateTimeOffset.Now;
+        openPos.HRDateApproved = DateTimeOffset.Now;
         _context.SaveChanges();
         
         return NoContent();
@@ -112,24 +134,171 @@ public class HomeController : Controller
         return NoContent();
     }
     
-    public IActionResult LeadershipApproval()
+    public IActionResult LeadershipApproval(int id, [FromQuery] string code)
     {
-        var exampleRole = new Role
+        var openPos = _context.OpenPositions
+            .Include(x => x.DepartmentPosition.Role)
+            .FirstOrDefault(x => x.Id == id);
+        if (openPos == null)
         {
-            Name = "Assistant Manager",
-        };
-        var examplePos = new OpenPosition()
+            return NotFound();
+        }
+        
+        var model = new HireApprovalRequest()
         {
-            Role = exampleRole
+            OpenPosition = openPos,
+            ApprovalCode = code,
         };
-        return View(examplePos);
+        return View(model);
     }
     
-    public IActionResult CandidateForm()
+    [HttpPost]
+    public IActionResult LeadershipApprove(int id, [FromBody] string code)
     {
-        return View();
+        var openPos = _context.OpenPositions.Find(id);
+        if (openPos == null)
+        {
+            return NotFound();
+        }
+        
+        openPos.LeadershipDateApproved = DateTimeOffset.Now;
+        _context.SaveChanges();
+        
+        return NoContent();
+    }
+    
+    [HttpPost]
+    public IActionResult LeadershipReject(int id, [FromBody] string code)
+    {
+        var openPos = _context.OpenPositions.Find(id);
+        if (openPos == null)
+        {
+            return NotFound();
+        }
+
+        _context.OpenPositions.Remove(openPos);
+        _context.SaveChanges();
+        
+        return NoContent();
+    }
+    
+    public IActionResult CandidateForm(int id)
+    {
+        var openPos = _context.OpenPositions
+            .Include(x => x.DepartmentPosition.Role)
+            .FirstOrDefault(x => x.Id == id);
+
+        var form = new Candidate()
+        {
+            OpenPositionId = openPos?.Id ?? default,
+            OpenPosition = openPos,
+        };
+        return View(form);
     }
 
+    [HttpPost]
+    public IActionResult CandidateForm(Candidate model)
+    {
+        var openPos = _context.OpenPositions.Find(model.OpenPositionId);
+        if (openPos == null)
+        {
+            return RedirectToAction("ThanksPage", "Home", new { reason = "applying"});
+        }
+
+        // Ensure we add a new row
+        model.Id = default;
+
+        _context.CandidateForms.Add(model);
+        _context.SaveChanges();
+        
+        return RedirectToAction("ThanksPage", "Home", new { reason = "applying"});
+    }
+    
+    public IActionResult OpenPositionList()
+    {
+        var posList = _context.OpenPositions
+            .Include(x => x.DepartmentPosition.Role)
+            .Where(x => x.HRDateApproved != null &&
+                                  x.LeadershipDateApproved != null &&
+                                  x.DateFilled == null)
+            .ToList();
+        return View(posList);
+    }
+
+    public IActionResult CandidateList()
+    {
+        var candidateList = _context.CandidateForms
+            .Include(x => x.OpenPosition)
+            .Include(x => x.OpenPosition.DepartmentPosition.Role)
+            .Where(x => x.OpenPosition.DateFilled == null)
+            .ToList();
+        return View(candidateList);
+    }
+
+    public async Task<IActionResult> SelectCandidate(int id)
+    {
+        var candidate = _context.CandidateForms
+            .Include(x => x.OpenPosition)
+            .Include(x => x.OpenPosition.DepartmentPosition)
+            .Include(x => x.OpenPosition.DepartmentPosition.Role)
+            .FirstOrDefault(x => x.Id ==id);
+        if (candidate == null)
+        {
+            return NotFound();
+        }
+        
+        candidate.OpenPosition.DateFilled = DateTimeOffset.Now;
+
+        var employee = new Employee()
+        {
+            Name = candidate.FirstName + " " + candidate.LastName,
+        };
+        candidate.OpenPosition.DepartmentPosition.Employee = employee;
+
+        _context.SaveChanges();
+
+        await _sendGridService.SendHiredEmailAsync(candidate.Id, candidate.Email,
+            candidate.OpenPosition.DepartmentPosition.Role.Name);
+
+        var rejected = _context.CandidateForms
+            .Where(x => x.OpenPositionId == candidate.OpenPositionId && 
+                        x.Id != candidate.Id)
+            .Select(x => x.Email)
+            .ToArray();
+        
+        await _sendGridService.SendRejectedEmailsAsync(rejected);
+        
+        return NoContent();
+    }
+
+    public IActionResult CandidateConfirm(int id)
+    {
+        var candidate = _context.CandidateForms.Find(id);
+        if (candidate == null)
+        {
+            return NotFound();
+        }
+        
+        return View(candidate);
+    }
+
+    [HttpPost]
+    public IActionResult CandidateConfirm(Candidate model)
+    {
+        _context.CandidateForms.Attach(model);
+        _context.Entry(model).State = EntityState.Modified;
+        _context.SaveChanges();
+        
+        // TODO: Add ticket to IT system
+        return RedirectToAction("ThanksPage", "Home", new { reason = "confirm your information"});
+    }
+    
+    public IActionResult ThanksPage([FromQuery] string reason)
+    {
+        ViewBag.Reason = reason;
+        return View();
+    }
+    
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
     public IActionResult Error()
     {

@@ -1,7 +1,10 @@
 using HexDemoSite.Data;
+using HexDemoSite.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var a = builder.Configuration.GetValue<string>("SENDGRID_APIKEY");
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
@@ -10,6 +13,8 @@ var myDocs = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
 var dbSource = Path.Join(myDocs, "HexDemoSite.db");
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlite($"Data Source={dbSource}"));
+
+builder.Services.AddScoped<SendGridService>();
 
 var app = builder.Build();
 

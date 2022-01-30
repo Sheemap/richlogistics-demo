@@ -3,8 +3,9 @@
 public class OpenPosition
 {
     public int Id { get; set; }
-    public int RoleId { get; set; }
-    public DateTimeOffset? DateApproved { get; set; }
+    public DateTimeOffset? HRDateApproved { get; set; }
+    public DateTimeOffset? LeadershipDateApproved { get; set; }
+    public DateTimeOffset? DateFilled { get; set; }
     
-    public virtual Role Role { get; set; }
+    public virtual DepartmentPosition DepartmentPosition { get; set; }
 }

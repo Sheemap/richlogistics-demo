@@ -1,0 +1,40 @@
+@model IEnumerable<HexDemoSite.Models.OpenPosition>
+
+@{
+    ViewData["Title"] = "Open Positions";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Open Positions</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.DepartmentPosition.Role)
+            </th>
+            <th>
+                Description
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.DepartmentPosition.Role.Name)
+            </td>
+            <td>
+                Employees are expected to do their required duties.
+            </td>
+            <td>
+                @{
+                    var routeData = new Dictionary<string, string>{ { nameof(item.Id), item.Id.ToString() } };
+                    <a asp-controller="Home" asp-action="CandidateForm" asp-all-route-data="routeData"><button class="btn btn-success">Apply</button></a>
+                }
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

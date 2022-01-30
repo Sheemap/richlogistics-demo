@@ -1,6 +1,6 @@
 ﻿namespace HexDemoSite.Models;
 
-public class CandidateForm
+public class Candidate
 {
     public int Id { get; set; }
     public int OpenPositionId { get; set; }

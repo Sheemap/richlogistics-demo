@@ -8,7 +8,7 @@
 <h1>Positions</h1>
 
 <p>
-    <a asp-action="CreatePosition">Open New Position</a>
+    <button class="btn btn-primary" onclick="createDemoPosition()">Open New Demo Position</button>
 </p>
 <table class="table">
     <thead>
@@ -50,6 +50,8 @@
         $(document).ready( function () {
             $('button').click((evt) => {
                 let id = $(evt.currentTarget).data('id');
+                if (typeof(id) === 'undefined') return;
+                
                 let action = $(evt.currentTarget).data('action');
                 let url = action === 'request' ?
                     '@Url.Action("RequestPosition", "Home")/' :
@@ -67,5 +69,18 @@
                 });
             });
         });
+        
+        function createDemoPosition() {
+            $.ajax({
+                url: '@Url.Action("CreateDemoPosition", "Home")',
+                type: 'POST',
+                success: function (data) {
+                    document.location.reload();
+                },
+                failure: function (data) {
+                    alert(data);
+                } 
+            });
+        }
     </script>
 }
