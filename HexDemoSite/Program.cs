@@ -9,7 +9,7 @@ var a = builder.Configuration.GetValue<string>("SENDGRID_APIKEY");
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 
-var myDocs = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+var myDocs = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
 var dbSource = Path.Join(myDocs, "HexDemoSite.db");
 builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlite($"Data Source={dbSource}"));
@@ -28,10 +28,11 @@ using (var scope = app.Services.CreateScope())
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {
-    app.UseExceptionHandler("/Home/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
+app.UseDeveloperExceptionPage();
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
