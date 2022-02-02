@@ -21,7 +21,7 @@
     @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.DepartmentPosition.Role.Name)
+                @await Html.PartialAsync("PositionInfoPartial", item.DepartmentPosition)
             </td>
             <td>
                 <button class="btn btn-success" data-id="@item.Id" data-action="approve">Approve</button>

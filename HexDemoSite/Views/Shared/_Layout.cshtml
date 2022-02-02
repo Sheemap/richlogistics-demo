@@ -41,6 +41,21 @@
     <main role="main" class="pb-3">
         @RenderBody()
     </main>
+    <div class="modal fade" id="viewModal" tabindex="-1" role="dialog" aria-labelledby="viewModal">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h4 class="modal-title" id="viewModalTitle">Modal title</h4>
+          </div>
+          <div id="viewModalBody" class="modal-body">
+            ...
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
 </div>
 
 <footer class="border-top footer text-muted">

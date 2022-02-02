@@ -1,4 +1,4 @@
-@model IEnumerable<HexDemoSite.Models.DepartmentPosition>
+@model DepartmentListModel
 
 @{
     ViewData["Title"] = "Department Positions";
@@ -8,25 +8,25 @@
 <h1>Positions</h1>
 
 <p>
-    <button class="btn btn-primary" onclick="createDemoPosition()">Open New Demo Position</button>
+    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newPositionModal">Requisition New Position</button>
 </p>
 <table class="table">
     <thead>
     <tr>
         <th>
-            @Html.DisplayNameFor(model => model.Role)
+            Role
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Employee)
+            Employee
         </th>
         <th></th>
     </tr>
     </thead>
     <tbody>
-    @foreach (var item in Model) {
+    @foreach (var item in Model.Positions) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Role.Name)
+                @await Html.PartialAsync("PositionInfoPartial", item)
             </td>
             <td>
                 @if (item.Employee != null) {
@@ -44,6 +44,54 @@
     }
     </tbody>
 </table>
+
+<!-- Modal -->
+<div class="modal fade" id="newPositionModal" tabindex="-1" aria-labelledby="newPosition" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form>
+                <div class="modal-header">
+                    <h5 class="modal-title" id="newPositionModalTitle">Requisition New Position</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="RoleId" class="form-label">Role</label>
+                        @Html.DropDownList("RoleId", Model.AvailableRoles.Select(x => new SelectListItem{Text = x.Name, Value = x.Id.ToString()}), new { @class = "form-control form-select" })
+                    </div>
+                    <div class="mb-3">
+                        <label for="JobTitle" class="form-label">Job Title</label>
+                        <input type="text" class="form-control" id="JobTitle" name="JobTitle">
+                    </div>
+                    <div class="mb-3">
+                        <label for="Location" class="form-label">Location</label>
+                        <select class="form-select" id="Location" name="Location">
+                            <option value="Little Rock, AR">Little Rock, AR</option>
+                            <option value="Laredo, TX">Laredo, TX</option>
+                            <option value="Burton, MI">Burton, MI</option>
+                            <option value="Nashville, TN">Nashville, TN</option>
+                            <option value="Monterrey, MX">Monterrey, MX</option>
+                            <option value="Dallas, TX">Dallas, TX</option>
+                            <option value="El Paso, TX">El Paso, TX</option>
+                            <option value="San Antonio, TX">San Antonio, TX</option>
+                            <option value="Cienega De Flores, MX">Cienega De Flores, MX</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="JobDescription" class="form-label">Job Description</label>
+                        <textarea class="form-control" id="JobDescription" name="JobDescription"></textarea>
+                    </div>
+                    
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
+        </div>
+  </div>
+</div>
 
 @section Scripts {
     <script>
@@ -68,19 +116,23 @@
                     } 
                 });
             });
+            
+            $('form').submit(function (evt){
+                evt.preventDefault();
+                let params = $('form').serialize();
+                
+                $.ajax({
+                        url: `@Url.Action("CreateDepartmentPosition", "Home")/?${params}`,
+                        type: 'POST',
+                        contentType: 'application/x-www-form-urlencoded; charset=utf-8',
+                        success: function (data) {
+                            document.location.reload();
+                        },
+                        failure: function (data) {
+                            alert(data);
+                        } 
+                    });
+                })
         });
-        
-        function createDemoPosition() {
-            $.ajax({
-                url: '@Url.Action("CreateDemoPosition", "Home")',
-                type: 'POST',
-                success: function (data) {
-                    document.location.reload();
-                },
-                failure: function (data) {
-                    alert(data);
-                } 
-            });
-        }
     </script>
 }

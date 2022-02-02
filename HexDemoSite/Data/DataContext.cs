@@ -72,9 +72,9 @@ public class DataContext : DbContext
         if (!context.DepartmentPositions.Any())
         {
             context.DepartmentPositions.AddRange(
-                new DepartmentPosition { Id = 1, EmployeeId = 1, RoleId = 1 },
-                new DepartmentPosition { Id = 2, EmployeeId = 2, RoleId = 2 },
-                new DepartmentPosition { Id = 3, RoleId = 3 }
+                new DepartmentPosition { Id = 1, EmployeeId = 1, RoleId = 1, JobTitle = "HR", Department = "Operations", Location = "LITTLE ROCK", JobDescription = "Handle HR duties within the department" },
+                new DepartmentPosition { Id = 2, EmployeeId = 2, RoleId = 2, JobTitle = "Manager", Department = "Operations", Location = "LAREDO", JobDescription = "Manage employees within the operations department" },
+                new DepartmentPosition { Id = 3, RoleId = 3, JobTitle = "Janitor", Department = "Operations", Location = "LITTLE ROCK", JobDescription = "Ensure the workspace is kept to a certain cleanliness level" }
             );
         }
 

@@ -31,28 +31,39 @@ public class HomeController : Controller
     }
 
     [HttpPost]
-    public IActionResult CreateDemoPosition()
+    public IActionResult CreateDepartmentPosition(DepartmentPosition position)
     {
-        var roles = _context.Roles.ToList();
-        var randomRole = roles[new Random().Next(0, roles.Count)];
-
-
-        var newPosition = new DepartmentPosition
+        position.Department = "Operations";
+        _context.DepartmentPositions.Add(position);
+        
+        var openPos = new OpenPosition
         {
-            Role = randomRole,
+            DepartmentPosition = position,
         };
-        _context.DepartmentPositions.Add(newPosition);
+        _context.OpenPositions.Add(openPos);
+
+        position.OpenPosition = openPos;
+        
         _context.SaveChanges();
+        
+        
         return NoContent();
     }
-    
+
     public IActionResult DepartmentList()
     {
         var posList = _context.DepartmentPositions
             .Include(x => x.Role)
             .Include(x => x.Employee)
             .ToList();
-        return View(posList);
+        var roles = _context.Roles.ToList();
+
+        var model = new DepartmentListModel()
+        {
+            Positions = posList,
+            AvailableRoles = roles,
+        };
+        return View(model);
     }
 
     [HttpPost]
