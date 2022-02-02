@@ -29,6 +29,39 @@ public class HomeController : Controller
     {
         return View();
     }
+    
+    public IActionResult AdminView()
+    {
+        var posList = _context.DepartmentPositions
+            .Include(x => x.Role)
+            .Include(x => x.Employee)
+            .ToList();
+        var roles = _context.Roles.ToList();
+
+        var depModel = new DepartmentListModel()
+        {
+            Positions = posList,
+            AvailableRoles = roles,
+        };
+        
+        var reqList = _context.OpenPositions
+            .Include(x => x.DepartmentPosition.Role)
+            .Where(x => x.HRDateApproved == null)
+            .ToList();
+        var hrModel = new HRListModel
+        {
+            ApprovalQueue = reqList,
+            Roles = roles,
+        };
+
+        var model = new AdminViewModel
+        {
+            DepartmentModel = depModel,
+            HRModel = hrModel,
+        };
+        
+        return View(model);
+    }
 
     [HttpPost]
     public IActionResult CreateDepartmentPosition(DepartmentPosition position)

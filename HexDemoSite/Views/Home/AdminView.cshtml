@@ -1,0 +1,16 @@
+﻿@model AdminViewModel
+
+@{
+    Layout = "_Layout";
+}
+
+<div class="row">
+    <div class="col border bg-light mx-5 mb-5">
+        <h1><small class="text-muted">Manager View</small></h1>
+        <partial name="Partials/ManagerViewContent" model="@Model.DepartmentModel"/>
+    </div>
+    <div class="col border bg-light mx-5 mb-5">
+        <h1><small class="text-muted">HR View</small></h1>
+        <partial name="Partials/HRViewContent" model="@Model.HRModel"/>
+    </div>
+</div>
