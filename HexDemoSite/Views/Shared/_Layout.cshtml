@@ -7,7 +7,6 @@
     <title>@ViewData["Title"] - HexDemoSite</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css"/>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true"/>
-    <link rel="stylesheet" href="~/HexDemoSite.styles.css" asp-append-version="true"/>
 </head>
 <body>
 <header>
@@ -19,19 +18,22 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                <ul class="navbar-nav flex-grow-1">
+                <ul class="nav">
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="DepartmentList">Department Positions</a>
-                    </li> | 
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="DepartmentList">Manager View</a>
+                    </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="HrApprovalList">HR Approval</a>
-                    </li> |
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="HrApprovalList">HR View</a>
+                    </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="OpenPositionList">Open Positions</a>
-                    </li> |
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="OpenPositionList">Candidate View</a>
+                    </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="CandidateList">Candidates</a>
-                    </li> |
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="CandidateList">Candidate List</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="AdminView">Admin View</a>
+                    </li>
                 </ul>
             </div>
         </div>
