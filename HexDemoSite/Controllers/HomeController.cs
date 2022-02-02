@@ -109,7 +109,39 @@ public class HomeController : Controller
             .Include(x => x.DepartmentPosition.Role)
             .Where(x => x.HRDateApproved == null)
             .ToList();
-        return View(reqList);
+        var roles = _context.Roles.ToList();
+        
+        var model = new HRListModel
+        {
+            ApprovalQueue = reqList,
+            Roles = roles,
+        };
+        return View(model);
+    }
+
+    [HttpPost]
+    public IActionResult CreateRole(Role model)
+    {
+        model.Id = 0;
+        _context.Roles.Add(model);
+        _context.SaveChanges();
+        
+        return NoContent();
+    }
+    
+    [HttpPost]
+    public IActionResult EditRole(Role model)
+    {
+        var role = _context.Roles.Find(model.Id);
+        if (role == null)
+        {
+            return NotFound();
+        }
+
+        role.Name = model.Name;
+        _context.SaveChanges();
+        
+        return NoContent();
     }
     
     [HttpPost]

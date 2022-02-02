@@ -1,38 +1,99 @@
-﻿@model IEnumerable<OpenPosition>
+﻿@model HRListModel
 
 @{
     ViewData["Title"] = "HR Approval";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h1>Requested Positions</h1>
 
-<table class="table">
-    <thead>
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.DepartmentPosition.Role)
-        </th>
-        <th></th>
-        <th></th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach (var item in Model) {
-        <tr>
-            <td>
-                @await Html.PartialAsync("PositionInfoPartial", item.DepartmentPosition)
-            </td>
-            <td>
-                <button class="btn btn-success" data-id="@item.Id" data-action="approve">Approve</button>
-            </td>
-            <td>
-                <button class="btn btn-secondary" data-id="@item.Id" data-action="decline">Decline</button>
-            </td>
-        </tr>
-    }
-    </tbody>
-</table>
+<div class="px-4">
+    <div class="row gx-5">
+        <div class="col">
+            <h3>Approval Queue</h3>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>
+                        Role
+                    </th>
+                    <th></th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var item in Model.ApprovalQueue)
+                {
+                    <tr>
+                        <td>
+                            @await Html.PartialAsync("PositionInfoPartial", item.DepartmentPosition)
+                        </td>
+                        <td>
+                            <button class="btn btn-success" data-id="@item.Id" data-action="approve">Approve</button>
+                        </td>
+                        <td>
+                            <button class="btn btn-secondary" data-id="@item.Id" data-action="decline">Decline</button>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+        <div class="col">
+            <div class="row">
+                <h3 class="col-8">Roles</h3>
+                <button class="col-4 btn btn-primary" data-action="add">Create New</button>
+            </div>
+            <table class="table">
+                <thead>
+                <tr>
+                    <th>
+                        Role Name
+                    </th>
+                    <th></th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var item in Model.Roles)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Name)
+                        </td>
+                        <td>
+                            <button class="btn btn-secondary" data-id="@item.Id" data-role-name="@item.Name" data-action="edit">Edit</button>
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="roleModal" tabindex="-1" aria-labelledby="roleModal" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form method="post">
+                <input type="hidden" name="id" />
+                <div class="modal-header">
+                    <h5 class="modal-title" id="roleModalTitle">New Role</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="Name" class="form-label">Role Name</label>
+                        <input type="text" class="form-control" id="Name" name="Name">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Save changes</button>
+                </div>
+            </form>
+        </div>
+  </div>
+</div>
 
 @section Scripts {
     <script>
@@ -40,6 +101,15 @@
             $('button').click((evt) => {
                 let id = $(evt.currentTarget).data('id');
                 let action = $(evt.currentTarget).data('action');
+                if (typeof(action) === 'undefined') {
+                    return;
+                }
+                
+                if (action !== "approve" || action !== "decline") {
+                    openRoleModal(id, action, evt.currentTarget);
+                    return;
+                }
+                
                 let url = action === 'approve' ?
                     '@Url.Action("HRApproveRequest", "Home")/' :
                     '@Url.Action("HRDeclineRequest", "Home")/';
@@ -55,6 +125,44 @@
                     } 
                 });
             });
+            
+            // after form submit, refresh page
+            $('form').submit((evt) => {
+                evt.preventDefault();
+                let id = $(evt.currentTarget).find('input[name="id"]').val();
+                let url = $('form').attr('action') + '/';
+                
+                $.ajax({
+                    url: url + id,
+                    type: 'POST',
+                    data: $(evt.currentTarget).serialize(),
+                    success: function (data) {
+                        document.location.reload();
+                    },
+                    failure: function (data) {
+                        alert(data);
+                    } 
+                });
+            });
         });
+        
+        function openRoleModal(id, action, btn){
+            if (action === "add"){
+                // clear out props, show modal
+                $('form').attr('action', '@Url.Action("CreateRole", "Home")');
+                $('#roleModalTitle').text('New Role');
+                $('#roleModal input[name="id"]').val('');
+                $('#roleModal input[name="Name"]').val('');
+                $('#roleModal').modal('show');
+                }
+            else {
+                let roleName = $(btn).data('role-name');
+                $('form').attr('action', '@Url.Action("EditRole", "Home")');
+                $('#roleModalTitle').text('Edit Role');
+                $('#roleModal input[name="id"]').val(id);
+                $('#roleModal input[name="Name"]').val(roleName);
+                $('#roleModal').modal('show');
+            }
+        }
     </script>
 }
