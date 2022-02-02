@@ -1,0 +1,35 @@
+﻿@model IEnumerable<HexDemoSite.Models.OpenPosition>
+
+<h1>Open Positions</h1>
+
+<table class="table">
+    <thead>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.DepartmentPosition.Role)
+        </th>
+        <th>
+            Description
+        </th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model) {
+        <tr>
+            <td>
+                @await Html.PartialAsync("PositionInfoPartial", item.DepartmentPosition)
+            </td>
+            <td>
+                Employees are expected to do their required duties.
+            </td>
+            <td>
+                @{
+                    var routeData = new Dictionary<string, string>{ { nameof(item.Id), item.Id.ToString() } };
+                    <a asp-controller="Home" asp-action="CandidateForm" asp-all-route-data="routeData" target="_blank"><button class="btn btn-success">Apply</button></a>
+                }
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

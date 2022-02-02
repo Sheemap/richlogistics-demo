@@ -53,11 +53,19 @@ public class HomeController : Controller
             ApprovalQueue = reqList,
             Roles = roles,
         };
+        
+        var openPosList = _context.OpenPositions
+            .Include(x => x.DepartmentPosition.Role)
+            .Where(x => x.HRDateApproved != null &&
+                        x.LeadershipDateApproved != null &&
+                        x.DateFilled == null)
+            .ToList();
 
         var model = new AdminViewModel
         {
             DepartmentModel = depModel,
             HRModel = hrModel,
+            OpenPositionsModel = openPosList,
         };
         
         return View(model);
