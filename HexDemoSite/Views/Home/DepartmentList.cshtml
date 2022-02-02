@@ -34,10 +34,10 @@
                 }
                 else if (item.OpenPositionId != null)
                 {
-                    <button class="btn btn-secondary" data-id="@item.OpenPositionId" data-action="cancel">Cancel</button>
+                    <button class="btn btn-secondary manager-func" data-id="@item.OpenPositionId" data-action="cancel">Cancel</button>
                 }
                 else {
-                    <button class="btn btn-primary" data-id="@item.Id" data-action="request">Request</button>
+                    <button class="btn btn-primary manager-func" data-id="@item.Id" data-action="request">Request</button>
                 }
             </td>
         </tr>
@@ -49,7 +49,7 @@
 <div class="modal fade" id="newPositionModal" tabindex="-1" aria-labelledby="newPosition" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form>
+            <form class="manager-form">
                 <div class="modal-header">
                     <h5 class="modal-title" id="newPositionModalTitle">Requisition New Position</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -96,7 +96,7 @@
 @section Scripts {
     <script>
         $(document).ready( function () {
-            $('button').click((evt) => {
+            $('.manager-func').click((evt) => {
                 let id = $(evt.currentTarget).data('id');
                 if (typeof(id) === 'undefined') return;
                 
@@ -117,7 +117,7 @@
                 });
             });
             
-            $('form').submit(function (evt){
+            $('.manager-form').submit(function (evt){
                 evt.preventDefault();
                 let params = $('form').serialize();
                 

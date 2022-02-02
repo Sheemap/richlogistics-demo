@@ -28,10 +28,10 @@
                             @await Html.PartialAsync("PositionInfoPartial", item.DepartmentPosition)
                         </td>
                         <td>
-                            <button class="btn btn-success" data-id="@item.Id" data-action="approve">Approve</button>
+                            <button class="btn btn-success hr-func" data-id="@item.Id" data-action="approve">Approve</button>
                         </td>
                         <td>
-                            <button class="btn btn-secondary" data-id="@item.Id" data-action="decline">Decline</button>
+                            <button class="btn btn-secondary hr-func" data-id="@item.Id" data-action="decline">Decline</button>
                         </td>
                     </tr>
                 }
@@ -41,7 +41,7 @@
         <div class="col">
             <div class="row">
                 <h3 class="col-8">Roles</h3>
-                <button class="col-4 btn btn-primary" data-action="add">Create New</button>
+                <button class="col-4 btn btn-primary hr-func" data-action="add">Create New</button>
             </div>
             <table class="table">
                 <thead>
@@ -60,7 +60,7 @@
                             @Html.DisplayFor(modelItem => item.Name)
                         </td>
                         <td>
-                            <button class="btn btn-secondary" data-id="@item.Id" data-role-name="@item.Name" data-action="edit">Edit</button>
+                            <button class="btn btn-secondary hr-func" data-id="@item.Id" data-role-name="@item.Name" data-action="edit">Edit</button>
                         </td>
                     </tr>
                 }
@@ -74,7 +74,7 @@
 <div class="modal fade" id="roleModal" tabindex="-1" aria-labelledby="roleModal" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form method="post">
+            <form class="hr-form" method="post">
                 <input type="hidden" name="id" />
                 <div class="modal-header">
                     <h5 class="modal-title" id="roleModalTitle">New Role</h5>
@@ -98,14 +98,14 @@
 @section Scripts {
     <script>
         $(document).ready( function () {
-            $('button').click((evt) => {
+            $('.hr-func').click((evt) => {
                 let id = $(evt.currentTarget).data('id');
                 let action = $(evt.currentTarget).data('action');
                 if (typeof(action) === 'undefined') {
                     return;
                 }
                 
-                if (action !== "approve" || action !== "decline") {
+                if (action !== "approve" && action !== "decline") {
                     openRoleModal(id, action, evt.currentTarget);
                     return;
                 }
@@ -127,7 +127,7 @@
             });
             
             // after form submit, refresh page
-            $('form').submit((evt) => {
+            $('.hr-form').submit((evt) => {
                 evt.preventDefault();
                 let id = $(evt.currentTarget).find('input[name="id"]').val();
                 let url = $('form').attr('action') + '/';

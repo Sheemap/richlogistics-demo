@@ -47,7 +47,7 @@
             @Html.DisplayFor(modelItem => item.Phone)
         </td>
         <td>
-            <button class="btn btn-success" data-id="@item.Id">Select</button>
+            <button class="btn btn-success candidate-list-func" data-id="@item.Id">Select</button>
         </td>
     </tr>
 }
@@ -57,7 +57,7 @@
 @section Scripts {
     <script>
         $(document).ready( function () {
-            $('button').click((evt) => {
+            $('.candidate-list-func').click((evt) => {
                 let id = $(evt.currentTarget).data('id');
                 $.ajax({
                     url: '@Url.Action("SelectCandidate", "Home")/' + id,

@@ -7,17 +7,17 @@
 
 <h2>Approve Hire Request</h2>
 
-<h4>Role: @Model.OpenPosition.DepartmentPosition.Role.Name</h4>
+<h4>Role: @await Html.PartialAsync("PositionInfoPartial", @Model.OpenPosition.DepartmentPosition)</h4>
 
 <div class="form w-25">
-    <button class="form-control my-2 btn btn-success" data-action="approve">Approve</button>
-    <button class="form-control my-2 btn btn-danger" data-action="reject">Reject</button>
+    <button class="form-control my-2 btn btn-success leader-func" data-action="approve">Approve</button>
+    <button class="form-control my-2 btn btn-danger leader-func" data-action="reject">Reject</button>
 </div>
 
 @section Scripts {
     <script>
         $(document).ready( function () {
-            $('button').click((evt) => {
+            $('.leader-func').click((evt) => {
                 let id = @Model.OpenPosition.Id;
                 let action = $(evt.currentTarget).data('action');
                 let url = action === 'approve' ?
