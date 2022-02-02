@@ -60,12 +60,19 @@ public class HomeController : Controller
                         x.LeadershipDateApproved != null &&
                         x.DateFilled == null)
             .ToList();
+        
+        var candidateList = _context.CandidateForms
+            .Include(x => x.OpenPosition)
+            .Include(x => x.OpenPosition.DepartmentPosition.Role)
+            .Where(x => x.OpenPosition.DateFilled == null)
+            .ToList();
 
         var model = new AdminViewModel
         {
             DepartmentModel = depModel,
             HRModel = hrModel,
             OpenPositionsModel = openPosList,
+            CandidateListModel = candidateList,
         };
         
         return View(model);
