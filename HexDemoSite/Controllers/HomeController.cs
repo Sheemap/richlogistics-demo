@@ -424,7 +424,7 @@ public class HomeController : Controller
         _context.SaveChanges();
         
         // TODO: Add ticket to IT system
-        return RedirectToAction("ThanksPage", "Home", new { reason = "confirm your information"});
+        return RedirectToAction("ThanksPage", "Home", new { reason = "confirming your information"});
     }
     
     public IActionResult ThanksPage([FromQuery] string reason)
