@@ -133,6 +133,8 @@ public class HomeController : Controller
         var openPos = new OpenPosition
         {
             DepartmentPosition = depPos,
+            HRDateApproved = DateTimeOffset.Now,
+            LeadershipDateApproved = DateTimeOffset.Now,
         };
         _context.OpenPositions.Add(openPos);
 
@@ -146,10 +148,17 @@ public class HomeController : Controller
     [HttpPost]
     public IActionResult CancelPositionRequest(int id)
     {
-        var openPos = _context.OpenPositions.Find(id);
+        var openPos = _context.OpenPositions
+            .Include(x => x.DepartmentPosition)
+            .FirstOrDefault(x => x.Id == id);
         if (openPos == null)
         {
             return NotFound();
+        }
+
+        if (openPos.HRDateApproved == null || openPos.LeadershipDateApproved == null)
+        {
+            _context.DepartmentPositions.Remove(openPos.DepartmentPosition);
         }
 
         _context.OpenPositions.Remove(openPos);
@@ -220,12 +229,15 @@ public class HomeController : Controller
     [HttpPost]
     public IActionResult HRDeclineRequest(int id)
     {
-        var openPos = _context.OpenPositions.Find(id);
+        var openPos = _context.OpenPositions
+            .Include(x => x.DepartmentPosition)
+            .FirstOrDefault(x => x.Id == id);
         if (openPos == null)
         {
             return NotFound();
         }
 
+        _context.DepartmentPositions.Remove(openPos.DepartmentPosition);
         _context.OpenPositions.Remove(openPos);
         _context.SaveChanges();
         
@@ -260,12 +272,15 @@ public class HomeController : Controller
     [HttpPost]
     public IActionResult LeadershipReject(int id)
     {
-        var openPos = _context.OpenPositions.Find(id);
+        var openPos = _context.OpenPositions
+            .Include(x => x.DepartmentPosition)
+            .FirstOrDefault(x => x.Id == id);
         if (openPos == null)
         {
             return NotFound();
         }
 
+        _context.DepartmentPositions.Remove(openPos.DepartmentPosition);
         _context.OpenPositions.Remove(openPos);
         _context.SaveChanges();
         
