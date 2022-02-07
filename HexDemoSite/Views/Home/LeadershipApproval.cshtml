@@ -1,44 +1,8 @@
-﻿@model HireApprovalRequest
+﻿@model IEnumerable<OpenPosition>
 
 @{
-    ViewBag.Title = "Approve Hire Request";
+    ViewBag.Title = "Approval Queue";
     Layout = "_Layout";
 }
 
-<h2>Approve Hire Request</h2>
-
-<h4>Role: @await Html.PartialAsync("PositionInfoPartial", @Model.OpenPosition.DepartmentPosition)</h4>
-
-<div class="form w-25">
-    <button class="form-control my-2 btn btn-success leader-func" data-action="approve">Approve</button>
-    <button class="form-control my-2 btn btn-danger leader-func" data-action="reject">Reject</button>
-</div>
-
-@section Scripts {
-    <script>
-        $(document).ready( function () {
-            $('.leader-func').click((evt) => {
-                let id = @Model.OpenPosition.Id;
-                let action = $(evt.currentTarget).data('action');
-                let url = action === 'approve' ?
-                    '@Url.Action("LeadershipApprove", "Home")/' :
-                    '@Url.Action("LeadershipReject", "Home")/';
-                
-                $.ajax({
-                    url: url + id,
-                    type: 'POST',
-                    data: {
-                        code: '@Model.ApprovalCode',
-                    },
-                    contentType: "application/json; charset=utf-8",
-                    success: function (data) {
-                        document.location.href = '@Url.Action("ThanksPage", "Home", new { reason = "responding to this approval request"})';
-                    },
-                    failure: function (data) {
-                        alert(data);
-                    } 
-                });
-            });
-        });
-    </script>
-}
+<partial name="Partials/LeadershipViewContent" model="Model"/>

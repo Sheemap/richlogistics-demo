@@ -54,6 +54,12 @@ public class HomeController : Controller
             Roles = roles,
         };
         
+        var leaderReqList = _context.OpenPositions
+            .Include(x => x.DepartmentPosition.Role)
+            .Where(x => x.HRDateApproved != null &&
+                                   x.LeadershipDateApproved == null)
+            .ToList();
+        
         var openPosList = _context.OpenPositions
             .Include(x => x.DepartmentPosition.Role)
             .Where(x => x.HRDateApproved != null &&
@@ -71,6 +77,7 @@ public class HomeController : Controller
         {
             DepartmentModel = depModel,
             HRModel = hrModel,
+            LeadershipModel = leaderReqList,
             OpenPositionsModel = openPosList,
             CandidateListModel = candidateList,
         };
@@ -225,26 +232,18 @@ public class HomeController : Controller
         return NoContent();
     }
     
-    public IActionResult LeadershipApproval(int id, [FromQuery] string code)
+    public IActionResult LeadershipApproval()
     {
-        var openPos = _context.OpenPositions
+        var approvalQueue = _context.OpenPositions
             .Include(x => x.DepartmentPosition.Role)
-            .FirstOrDefault(x => x.Id == id);
-        if (openPos == null)
-        {
-            return NotFound();
-        }
+            .Where(x => x.HRDateApproved != null &&
+                                   x.LeadershipDateApproved == null);
         
-        var model = new HireApprovalRequest()
-        {
-            OpenPosition = openPos,
-            ApprovalCode = code,
-        };
-        return View(model);
+        return View(approvalQueue);
     }
     
     [HttpPost]
-    public IActionResult LeadershipApprove(int id, [FromBody] string code)
+    public IActionResult LeadershipApprove(int id)
     {
         var openPos = _context.OpenPositions.Find(id);
         if (openPos == null)
@@ -259,7 +258,7 @@ public class HomeController : Controller
     }
     
     [HttpPost]
-    public IActionResult LeadershipReject(int id, [FromBody] string code)
+    public IActionResult LeadershipReject(int id)
     {
         var openPos = _context.OpenPositions.Find(id);
         if (openPos == null)
