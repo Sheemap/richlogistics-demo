@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Routing;
+﻿using HexDemoSite.Models;
+using Microsoft.AspNetCore.Mvc.Routing;
 using SendGrid;
 using SendGrid.Helpers.Mail;
 
@@ -17,12 +18,24 @@ public class SendGridService
         _leadershipEmail = config.GetValue<string>("LeadershipEmail");
     }
 
-    public async Task SendHireRequestApprovalAsync(int positionId, string approvalCode)
+    public async Task SendHireRequestApprovalAsync(OpenPosition position, string approvalCode)
     {
-        var url = $"{_baseUrl}/home/leadershipapproval/{positionId}?code={approvalCode}";
+        
+        
+        var approveUrl = $"{_baseUrl}/home/LeadershipEmailApproval/{position.Id}?code={approvalCode}&approved=true";
+        var rejectUrl = $"{_baseUrl}/home/LeadershipEmailApproval/{position.Id}?code={approvalCode}&approved=false";
         var from = new EmailAddress("no-reply@snazcat.com");
         var to = new EmailAddress(_leadershipEmail);
-        var templatedEmail = MailHelper.CreateSingleTemplateEmail(from, to, "d-2eb7adfeac8646f1960a6728a90f23f3", new { url });
+        var templatedEmail = MailHelper.CreateSingleTemplateEmail(from, to, "d-2eb7adfeac8646f1960a6728a90f23f3", 
+            new
+            {
+                approveUrl,
+                rejectUrl,
+                role = position.DepartmentPosition.Role.Name,
+                department = "Operations",
+                location = position.DepartmentPosition.Location,
+                jobDesc = position.DepartmentPosition.JobDescription,
+            });
         await _client.SendEmailAsync(templatedEmail);
     }
 

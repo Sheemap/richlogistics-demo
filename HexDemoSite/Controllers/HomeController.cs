@@ -211,14 +211,17 @@ public class HomeController : Controller
     [HttpPost]
     public async Task<IActionResult> HRApproveRequest(int id)
     {
-        var openPos = _context.OpenPositions.Find(id);
+        var openPos = _context.OpenPositions
+            .Include(x => x.DepartmentPosition)
+            .Include(x => x.DepartmentPosition.Role)
+            .FirstOrDefault(x => x.Id == id);
         if (openPos == null)
         {
             return NotFound();
         }
 
         var code = Guid.NewGuid().ToString();
-        await _sendGridService.SendHireRequestApprovalAsync(id, code);
+        await _sendGridService.SendHireRequestApprovalAsync(openPos, code);
         
         openPos.HRDateApproved = DateTimeOffset.Now;
         _context.SaveChanges();
@@ -252,6 +255,32 @@ public class HomeController : Controller
                                    x.LeadershipDateApproved == null);
         
         return View(approvalQueue);
+    }
+    
+    public IActionResult LeadershipEmailApproval(int id, [FromQuery] bool approved)
+    {
+        var openPos = _context.OpenPositions
+            .Include(x => x.DepartmentPosition)
+            .FirstOrDefault(x => x.Id == id);
+        if (openPos == null)
+        {
+            return NotFound();
+        }
+
+        if (approved)
+        {
+            openPos.LeadershipDateApproved = DateTimeOffset.Now;
+        }
+        else
+        {
+            _context.DepartmentPositions.Remove(openPos.DepartmentPosition);
+            _context.OpenPositions.Remove(openPos);
+        }
+        
+        _context.SaveChanges();
+
+        return RedirectToAction("ThanksPage", "Home", new { reason = "responding"});
+
     }
     
     [HttpPost]
