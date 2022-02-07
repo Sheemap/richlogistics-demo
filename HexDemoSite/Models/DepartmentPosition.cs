@@ -6,8 +6,7 @@ public class DepartmentPosition
     public int RoleId { get; set; }
     public int? EmployeeId { get; set; }
     public int? OpenPositionId { get; set; }
-    
-    public string JobTitle { get; set; }
+
     public string Department { get; set; }
     public string Location { get; set; }
     public string JobDescription { get; set; }

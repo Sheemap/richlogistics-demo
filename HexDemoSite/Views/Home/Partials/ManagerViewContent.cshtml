@@ -55,10 +55,6 @@
                         @Html.DropDownList("RoleId", Model.AvailableRoles.Select(x => new SelectListItem{Text = x.Name, Value = x.Id.ToString()}), new { @class = "form-control form-select" })
                     </div>
                     <div class="mb-3">
-                        <label for="JobTitle" class="form-label">Job Title</label>
-                        <input type="text" class="form-control" id="JobTitle" name="JobTitle">
-                    </div>
-                    <div class="mb-3">
                         <label for="Location" class="form-label">Location</label>
                         <select class="form-select" id="Location" name="Location">
                             <option value="Little Rock, AR">Little Rock, AR</option>
@@ -74,7 +70,7 @@
                     </div>
                     <div class="mb-3">
                         <label for="JobDescription" class="form-label">Job Description</label>
-                        <textarea class="form-control" id="JobDescription" name="JobDescription"></textarea>
+                        <textarea class="form-control" id="JobDescription" name="JobDescription" required=""></textarea>
                     </div>
                     
                     
