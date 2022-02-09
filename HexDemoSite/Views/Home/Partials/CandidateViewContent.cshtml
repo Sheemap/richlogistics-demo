@@ -8,9 +8,6 @@
         <th>
             @Html.DisplayNameFor(model => model.DepartmentPosition.Role)
         </th>
-        <th>
-            Description
-        </th>
         <th></th>
     </tr>
     </thead>
@@ -19,9 +16,6 @@
         <tr>
             <td>
                 @await Html.PartialAsync("PositionInfoPartial", item.DepartmentPosition)
-            </td>
-            <td>
-                Employees are expected to do their required duties.
             </td>
             <td>
                 @{
