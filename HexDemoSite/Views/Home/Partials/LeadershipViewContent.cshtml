@@ -1,37 +1,35 @@
 ﻿@model IEnumerable<OpenPosition>
 
-<div class="px-4">
-    <div class="row gx-5">
-        <div class="col">
-            <h3>Approval Queue</h3>
-            <table class="table">
-                <thead>
+<div class="row">
+    <div class="col">
+        <h3>Approval Queue</h3>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>
+                    Role
+                </th>
+                <th></th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Model)
+            {
                 <tr>
-                    <th>
-                        Role
-                    </th>
-                    <th></th>
-                    <th></th>
+                    <td>
+                        @await Html.PartialAsync("PositionInfoPartial", item.DepartmentPosition)
+                    </td>
+                    <td>
+                        <button class="btn btn-success leader-func" data-id="@item.Id" data-action="approve">Approve</button>
+                    </td>
+                    <td>
+                        <button class="btn btn-secondary leader-func" data-id="@item.Id" data-action="decline">Decline</button>
+                    </td>
                 </tr>
-                </thead>
-                <tbody>
-                @foreach (var item in Model)
-                {
-                    <tr>
-                        <td>
-                            @await Html.PartialAsync("PositionInfoPartial", item.DepartmentPosition)
-                        </td>
-                        <td>
-                            <button class="btn btn-success leader-func" data-id="@item.Id" data-action="approve">Approve</button>
-                        </td>
-                        <td>
-                            <button class="btn btn-secondary leader-func" data-id="@item.Id" data-action="decline">Decline</button>
-                        </td>
-                    </tr>
-                }
-                </tbody>
-            </table>
-        </div>
+            }
+            </tbody>
+        </table>
     </div>
 </div>
 

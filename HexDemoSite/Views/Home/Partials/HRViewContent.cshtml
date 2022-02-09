@@ -1,66 +1,65 @@
 ﻿@model HRListModel
 
-<div class="px-4">
-    <div class="row gx-5">
-        <div class="col">
-            <h3>Approval Queue</h3>
-            <table class="table">
-                <thead>
+<div class="row">
+    <div class="col">
+        <h3>Approval Queue</h3>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>
+                    Role
+                </th>
+                <th></th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Model.ApprovalQueue)
+            {
                 <tr>
-                    <th>
-                        Role
-                    </th>
-                    <th></th>
-                    <th></th>
+                    <td>
+                        @await Html.PartialAsync("PositionInfoPartial", item.DepartmentPosition)
+                    </td>
+                    <td>
+                        <button class="btn btn-success hr-func" data-id="@item.Id" data-action="approve">Approve</button>
+                    </td>
+                    <td>
+                        <button class="btn btn-secondary hr-func" data-id="@item.Id" data-action="decline">Decline</button>
+                    </td>
                 </tr>
-                </thead>
-                <tbody>
-                @foreach (var item in Model.ApprovalQueue)
-                {
-                    <tr>
-                        <td>
-                            @await Html.PartialAsync("PositionInfoPartial", item.DepartmentPosition)
-                        </td>
-                        <td>
-                            <button class="btn btn-success hr-func" data-id="@item.Id" data-action="approve">Approve</button>
-                        </td>
-                        <td>
-                            <button class="btn btn-secondary hr-func" data-id="@item.Id" data-action="decline">Decline</button>
-                        </td>
-                    </tr>
-                }
-                </tbody>
-            </table>
+            }
+            </tbody>
+        </table>
+        <hr/>
+    </div>
+    <div class="col">
+        <div class="row">
+            <h3 class="col">Roles</h3>
+            <button class="col btn btn-primary hr-func mx-3" data-action="add">Create New</button>
         </div>
-        <div class="col">
-            <div class="row">
-                <h3 class="col-8">Roles</h3>
-                <button class="col-4 btn btn-primary hr-func" data-action="add">Create New</button>
-            </div>
-            <table class="table">
-                <thead>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>
+                    Role Name
+                </th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach (var item in Model.Roles)
+            {
                 <tr>
-                    <th>
-                        Role Name
-                    </th>
-                    <th></th>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        <button class="btn btn-secondary hr-func" data-id="@item.Id" data-role-name="@item.Name" data-action="edit">Edit</button>
+                    </td>
                 </tr>
-                </thead>
-                <tbody>
-                @foreach (var item in Model.Roles)
-                {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Name)
-                        </td>
-                        <td>
-                            <button class="btn btn-secondary hr-func" data-id="@item.Id" data-role-name="@item.Name" data-action="edit">Edit</button>
-                        </td>
-                    </tr>
-                }
-                </tbody>
-            </table>
-        </div>
+            }
+            </tbody>
+        </table>
     </div>
 </div>
 
