@@ -16,9 +16,9 @@
             <tbody>
             @foreach (var item in Model.ApprovalQueue)
             {
-                <tr>
+                <tr @await Html.PartialAsync("PositionInfoPartial", item.DepartmentPosition)>
                     <td>
-                        @await Html.PartialAsync("PositionInfoPartial", item.DepartmentPosition)
+                        @item.DepartmentPosition.Role.Name
                     </td>
                     <td>
                         <button class="btn btn-success hr-func" data-id="@item.Id" data-action="approve">Approve</button>
@@ -88,6 +88,8 @@
 <script>
     $(document).ready( function () {
         $('.hr-func').click((evt) => {
+            evt.stopPropagation();
+            
             let id = $(evt.currentTarget).data('id');
             let action = $(evt.currentTarget).data('action');
             if (typeof(action) === 'undefined') {

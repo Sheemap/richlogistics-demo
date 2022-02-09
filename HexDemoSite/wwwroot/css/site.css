@@ -77,3 +77,7 @@ a {
 .btn-danger:hover {
   background-color: #A60020;
 }
+
+.role-info {
+  cursor: pointer;
+}

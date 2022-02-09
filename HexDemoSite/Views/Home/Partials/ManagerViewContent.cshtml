@@ -15,9 +15,9 @@
     </thead>
     <tbody>
     @foreach (var item in Model.Positions) {
-        <tr>
+        <tr @await Html.PartialAsync("PositionInfoPartial", item)>
             <td>
-                @await Html.PartialAsync("PositionInfoPartial", item)
+                @item.Role.Name
             </td>
             <td>
                 @if (item.Employee != null) {
@@ -84,6 +84,8 @@
 <script>
     $(document).ready( function () {
         $('.manager-func').click((evt) => {
+            evt.stopPropagation();
+
             let id = $(evt.currentTarget).data('id');
             if (typeof(id) === 'undefined') return;
             

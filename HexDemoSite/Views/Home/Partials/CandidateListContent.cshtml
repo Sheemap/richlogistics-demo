@@ -52,6 +52,8 @@
 <script>
     $(document).ready( function () {
         $('.candidate-list-func').click((evt) => {
+            evt.stopPropagation();
+            
             let id = $(evt.currentTarget).data('id');
             $.ajax({
                 url: '@Url.Action("SelectCandidate", "Home")/' + id,

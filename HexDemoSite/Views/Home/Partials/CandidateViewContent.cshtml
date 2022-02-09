@@ -13,17 +13,25 @@
     </thead>
     <tbody>
     @foreach (var item in Model) {
-        <tr>
+        <tr @await Html.PartialAsync("PositionInfoPartial", item.DepartmentPosition)>
             <td>
-                @await Html.PartialAsync("PositionInfoPartial", item.DepartmentPosition)
+                @item.DepartmentPosition.Role.Name
             </td>
             <td>
                 @{
                     var routeData = new Dictionary<string, string>{ { nameof(item.Id), item.Id.ToString() } };
-                    <a asp-controller="Home" asp-action="CandidateForm" asp-all-route-data="routeData" target="_blank"><button class="btn btn-success">Apply</button></a>
+                    <a asp-controller="Home" asp-action="CandidateForm" asp-all-route-data="routeData" target="_blank"><button class="btn btn-success apply-btn">Apply</button></a>
                 }
             </td>
         </tr>
     }
     </tbody>
 </table>
+
+<script>
+    $(document).ready( function () {
+        $('.apply-btn').click((evt) => {
+            evt.stopPropagation();
+        });
+    });
+</script>

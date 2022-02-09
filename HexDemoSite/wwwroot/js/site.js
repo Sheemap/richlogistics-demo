@@ -17,3 +17,14 @@ function showRoleModal(name, department, location, jobDesc){
     
     $('#viewModal').modal('show');
 }
+
+$(document).ready(function(){
+    $('.role-info').click(function (evt) {
+        let name = $(evt.currentTarget).data('rolename');
+        let dep = $(evt.currentTarget).data('roledepartment');
+        let loc = $(evt.currentTarget).data('rolelocation');
+        let desc = $(evt.currentTarget).data('jobdescription');
+
+        showRoleModal(name, dep, loc, desc);
+    });
+});

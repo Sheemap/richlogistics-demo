@@ -9,7 +9,7 @@
 
 @if (Model?.OpenPosition != null)
 {
-    <h4>Submit your application for @await Html.PartialAsync("PositionInfoPartial", Model.OpenPosition.DepartmentPosition)</h4>
+    <h4>Submit your application for @Model.OpenPosition.DepartmentPosition.Role.Name</h4>
 }
 else
 {
