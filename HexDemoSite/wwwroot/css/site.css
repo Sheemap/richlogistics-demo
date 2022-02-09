@@ -16,10 +16,14 @@ html {
 body {
   margin-bottom: 60px;
   color: #303E47 !important;
+  font-family: "Segoe UI Light", sans-serif;
+
 }
 
-h2 {
+h2, h3 {
   color: #303E47 !important;
+  font-family: "Segoe UI", sans-serif;
+  font-weight: bold;
 }
 
 hr {
@@ -71,8 +75,4 @@ a {
 
 .btn-danger:hover {
   background-color: #A60020;
-}
-
-h3 {
-  font-weight: bold;
 }
