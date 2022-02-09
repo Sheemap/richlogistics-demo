@@ -12,12 +12,14 @@ public class HomeController : Controller
     private readonly ILogger<HomeController> _logger;
     private readonly DataContext _context;
     private readonly SendGridService _sendGridService;
+    private readonly HappyFoxClient _happyFoxClient;
 
-    public HomeController(ILogger<HomeController> logger, DataContext context, SendGridService sendGridService)
+    public HomeController(ILogger<HomeController> logger, DataContext context, SendGridService sendGridService, HappyFoxClient happyFoxClient)
     {
         _logger = logger;
         _context = context;
         _sendGridService = sendGridService;
+        _happyFoxClient = happyFoxClient;
     }
 
     public IActionResult Index()
@@ -419,13 +421,23 @@ public class HomeController : Controller
     }
 
     [HttpPost]
-    public IActionResult CandidateConfirm(Candidate model)
+    public async Task<IActionResult> CandidateConfirm(Candidate model)
     {
         _context.CandidateForms.Attach(model);
         _context.Entry(model).State = EntityState.Modified;
-        _context.SaveChanges();
+        await _context.SaveChangesAsync();
         
-        // TODO: Add ticket to IT system
+        var pos = await _context.OpenPositions
+            .Include(x => x.DepartmentPosition.Role)
+            .FirstOrDefaultAsync(x => x.Id == model.OpenPositionId);
+        if (pos == null)
+        {
+            return NotFound();
+        }
+
+        await _happyFoxClient.CreateTicketAsync(pos.DepartmentPosition.Role.Name,
+            $"{model.FirstName} {model.LastName}");
+        
         return RedirectToAction("ThanksPage", "Home", new { reason = "confirming your information"});
     }
     

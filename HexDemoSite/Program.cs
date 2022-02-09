@@ -15,6 +15,7 @@ builder.Services.AddDbContext<DataContext>(options =>
     options.UseSqlite($"Data Source={dbSource}"));
 
 builder.Services.AddScoped<SendGridService>();
+builder.Services.AddScoped<HappyFoxClient>();
 
 var app = builder.Build();
 
