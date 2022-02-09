@@ -88,11 +88,13 @@ public class HomeController : Controller
     [HttpPost]
     public IActionResult CreateDepartmentPosition(DepartmentPosition position)
     {
+        position.Id = 0;
         position.Department = "Operations";
         _context.DepartmentPositions.Add(position);
         
         var openPos = new OpenPosition
         {
+            Id = 0,
             DepartmentPosition = position,
         };
         _context.OpenPositions.Add(openPos);
