@@ -53,6 +53,7 @@ tbody tr:hover {
 a {
   color: #A1B3BF !important;
   cursor: pointer;
+  text-decoration: none;
 }
 
 .border {

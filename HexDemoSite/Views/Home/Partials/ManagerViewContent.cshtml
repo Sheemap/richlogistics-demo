@@ -2,9 +2,6 @@
 
 <h3>Positions</h3>
 
-<p>
-    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newPositionModal">Requisition New Position</button>
-</p>
 <table class="table">
     <thead>
     <tr>
@@ -38,7 +35,7 @@
     }
     </tbody>
 </table>
-<a>+ Add New</a>
+<a data-bs-toggle="modal" data-bs-target="#newPositionModal">+ Add New</a>
 
 <!-- Modal -->
 <div class="modal fade" id="newPositionModal" tabindex="-1" aria-labelledby="newPosition" aria-hidden="true">
@@ -46,7 +43,7 @@
         <div class="modal-content">
             <form class="manager-form">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="newPositionModalTitle">Requisition New Position</h5>
+                    <h5 class="modal-title" id="newPositionModalTitle">Request New Position</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -77,7 +74,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Save changes</button>
+                    <button type="submit" class="btn btn-success">Save changes</button>
                 </div>
             </form>
         </div>
