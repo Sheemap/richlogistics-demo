@@ -6,23 +6,28 @@
 
 <div class="row">
     <div class="col border bg-light mx-3 mb-5">
-        <h1><small class="text-muted">Manager View</small></h1>
+        <h2><strong>Manager View</strong></h2>
+        <hr/>
         <partial name="Partials/ManagerViewContent" model="@Model.DepartmentModel"/>
     </div>
     <div class="col border bg-light mx-3 mb-5">
-        <h1><small class="text-muted">HR View</small></h1>
+        <h2><strong>HR View</strong></h2>
+        <hr/>
         <partial name="Partials/HRViewContent" model="@Model.HRModel"/>
     </div>
     <div class="col border bg-light mx-3 mb-5">
-        <h1><small class="text-muted">Leadership View</small></h1>
+        <h2><strong>Leadership View</strong></h2>
+        <hr/>
         <partial name="Partials/LeadershipViewContent" model="@Model.LeadershipModel"/>
     </div>
     <div class="col border bg-light mx-3 mb-5">
-        <h1><small class="text-muted">Candidate View</small></h1>
+        <h2><strong>Candidate View</strong></h2>
+        <hr/>
         <partial name="Partials/CandidateViewContent" model="@Model.OpenPositionsModel"/>
     </div>
     <div class="col border bg-light mx-3 mb-5">
-        <h1><small class="text-muted">Applicant List</small></h1>
+        <h2><strong>Applicant List</strong></h2>
+        <hr/>
         <partial name="Partials/CandidateListContent" model="@Model.CandidateListModel"/>
     </div>
 </div>

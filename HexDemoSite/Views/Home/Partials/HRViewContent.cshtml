@@ -1,7 +1,7 @@
 ﻿@model HRListModel
 
 <div class="row">
-    <div class="col">
+    <div class="col mb-5">
         <h3>Approval Queue</h3>
         <table class="table">
             <thead>
@@ -24,15 +24,14 @@
                         <button class="btn btn-success hr-func" data-id="@item.Id" data-action="approve">Approve</button>
                     </td>
                     <td>
-                        <button class="btn btn-secondary hr-func" data-id="@item.Id" data-action="decline">Decline</button>
+                        <button class="btn btn-danger hr-func" data-id="@item.Id" data-action="decline">Deny</button>
                     </td>
                 </tr>
             }
             </tbody>
         </table>
-        <hr/>
     </div>
-    <div class="col">
+    <div class="col mb-3">
         <h3>Roles</h3>
         <button class="btn btn-primary hr-func" data-action="add">Create New</button>
         <table class="table">
@@ -58,6 +57,7 @@
             }
             </tbody>
         </table>
+        <a>+ Add New</a>
     </div>
 </div>
 

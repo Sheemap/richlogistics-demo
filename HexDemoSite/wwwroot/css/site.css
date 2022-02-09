@@ -15,4 +15,64 @@ html {
 
 body {
   margin-bottom: 60px;
+  color: #303E47 !important;
+}
+
+h2 {
+  color: #303E47 !important;
+}
+
+hr {
+  background-color: #303E47;
+  opacity: 1;
+}
+
+.table {
+  max-width: 100%;
+  width: 100%;
+}
+
+tbody tr:hover {
+  background-color: #D0D9DF;
+}
+
+.btn-secondary {
+  background-color: #A1B3BF;
+  border-color: #A1B3BF;
+}
+
+.btn-secondary:hover {
+  background-color: #A1B3BF;
+  border-color: #303E47;
+}
+
+a {
+  color: #A1B3BF !important;
+  cursor: pointer;
+}
+
+.border {
+  border-color: #EEF2F4 !important;
+}
+
+.btn-success {
+  background-color: #5DA271;
+  border: 0;
+}
+
+.btn-success:hover {
+  background-color: #467A55;
+}
+
+.btn-danger {
+  background-color: #DE002B;
+  border: 0;
+}
+
+.btn-danger:hover {
+  background-color: #A60020;
+}
+
+h3 {
+  font-weight: bold;
 }
