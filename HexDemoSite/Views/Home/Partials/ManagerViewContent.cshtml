@@ -23,6 +23,12 @@
                 @if (item.Employee != null) {
                     @Html.DisplayFor(modelItem => item.Employee.Name)
                 }
+                else if (item.OpenPosition != null &&
+                         (item.OpenPosition.HRDateApproved == null ||
+                          item.OpenPosition.LeadershipDateApproved == null))
+                {
+                    <button class="btn btn-secondary manager-func" data-id="@item.OpenPositionId" data-action="cancel">Under Review</button>
+                }
                 else if (item.OpenPositionId != null)
                 {
                     <button class="btn btn-danger manager-func" data-id="@item.OpenPositionId" data-action="cancel">Cancel</button>

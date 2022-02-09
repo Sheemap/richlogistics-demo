@@ -37,6 +37,7 @@ public class HomeController : Controller
         var posList = _context.DepartmentPositions
             .Include(x => x.Role)
             .Include(x => x.Employee)
+            .Include(x => x.OpenPosition)
             .ToList();
         var roles = _context.Roles.ToList();
 
@@ -114,6 +115,7 @@ public class HomeController : Controller
         var posList = _context.DepartmentPositions
             .Include(x => x.Role)
             .Include(x => x.Employee)
+            .Include(x => x.OpenPosition)
             .ToList();
         var roles = _context.Roles.ToList();
 
